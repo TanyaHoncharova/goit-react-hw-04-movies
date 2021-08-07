@@ -1,0 +1,16 @@
+.wraper{
+    display: flex;
+    flex-wrap: wrap;
+    margin: -10px;
+    justify-content: center;
+    border-bottom: 1px solid rgba(247, 242, 242, 0.404);
+    box-shadow: 1px 3px 5px rgb(204 196 196 / 58%);
+
+}
+
+.actor{
+    list-style: none;
+    margin: 10px;
+    width: 200px;
+
+}

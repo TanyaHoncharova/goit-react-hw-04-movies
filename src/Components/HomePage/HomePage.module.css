@@ -1,0 +1,17 @@
+.sectionName {
+    color: rgb(4, 16, 27);
+    display: flex;
+    justify-content: center;
+}
+
+.order{
+    list-style: none;
+    margin-left:15px ;
+    margin-bottom: 5px;
+    
+}
+
+.link{
+    text-decoration: none;
+
+}
