@@ -1,7 +1,8 @@
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import BtnGoBack from '../BtnCoBack/BtnGoBack'
 import styles from './MoviesPage.module.css';
+import qs from "query-string";
 import axios from 'axios';
 // import getInfo from '../../servise/Api';
 const KEY = `ccfe38522ca5ce6e07118893ca908be1`;
@@ -9,8 +10,14 @@ const URL = `https://api.themoviedb.org/3`;
 
 const MoviesPage = () => {
     const {url} = useRouteMatch();
-    const [searchQuery, setSerchQuery] = useState('');
-    const [movies, setMovies] = useState([])
+    const { pathname, search } = useLocation();
+    const location = useLocation();
+    const history = useHistory();
+
+
+    const [searchQuery, setSerchQuery] = useState(qs.parse(search)?.query ?? "");
+    // const [searchQuery, setSerchQuery] = useState('');
+    const [movies, setMovies] = useState([]);
 
     const handelChenge = (e) => {
         setSerchQuery(e.target.value.toLowerCase());
@@ -32,22 +39,26 @@ const MoviesPage = () => {
             return
         }
         if (searchQuery){
-        MovieSearch(searchQuery);}
-    },[searchQuery])
+            MovieSearch(searchQuery);
+            setSerchQuery('');
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
     const handleSubmit = (e) => {
-        e.preventDefault();        
+        e.preventDefault();
         MovieSearch(searchQuery);
-        // setSerchQuery('');
-        console.log("from submit", movies);
-       
+        history.push({
+      ...location,
+       search: `query=${searchQuery}`,
+    });
+        setSerchQuery('');
     };
 
-    
 
     return (
         <>
-            <BtnGoBack/>
+            <BtnGoBack />
             <form className={styles.form} onSubmit={handleSubmit}>
                 <input
                     className={styles.formInput}
@@ -60,12 +71,22 @@ const MoviesPage = () => {
                 />
             <button type="submit" className={styles.formButton}>
                     <span className={styles.formButtonLabelSearc}></span>
-            </button>                 
+            </button>
             </form>
             <ul className={styles.order}>
-                {movies.map(movie => {
+                {movies && movies.map(movie => {
                     return (<li key={movie.id}>
-                        <NavLink to={`${url}/${movie.id}`} className={styles.link}>{movie.title} </NavLink>
+                        <NavLink
+                            to={{
+                  pathname: `${url}/${movie.id}`,
+                  state: {
+                      from: location,
+                    //       pathname,
+                    // searchQuery,
+                  },
+                }}>
+                            {movie.title}
+                        </NavLink>
                     </li>)
                 })}
                 </ul>

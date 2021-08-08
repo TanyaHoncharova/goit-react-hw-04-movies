@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, Route, useRouteMatch } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
+
+import { useHistory } from "react-router-dom";
+
 import BtnGoBack from '../BtnCoBack/BtnGoBack';
 import axios from 'axios';
 // import * as APIgetInfo from '../../servise/Api';
@@ -15,9 +18,12 @@ const URL = `https://api.themoviedb.org/3`;
 export default function MovieDetalsPage() {
     const { movieId } = useParams();
     const [movie, setMovie] = useState([]);
-    const { url, path } = useRouteMatch();
+  const { url, path } = useRouteMatch();
+  
+  const history = useHistory();
 
-    
+  
+
     async function getMovieInfo(movieId) {
         try {
             const response = await axios.get(`${URL}/movie/${movieId}?api_key=${KEY}`);
@@ -36,7 +42,7 @@ export default function MovieDetalsPage() {
 
   return (
       <>
-      <BtnGoBack/>
+      <BtnGoBack  />
       {movie && (
         <>
         <div className={styles.wraper}>
@@ -59,10 +65,14 @@ export default function MovieDetalsPage() {
               <h3>Additional information</h3>
               <ul>
                 <li>
-                  <NavLink to={`${url}/cast`}>Cast</NavLink>
+                <NavLink to={{
+                    pathname:`${url}/cast`,
+                    state:{ from: history.location.state.from}}}>Cast</NavLink>
                 </li>
                 <li>
-                  <NavLink to={`${url}/reviews`}>Reviews</NavLink>
+                  <NavLink to={{
+                    pathname:`${url}/reviews`,
+                    state:{ from: history.location.state.from}}}>Reviews</NavLink>
                 </li>
               </ul>
               <Route path={`${path}/cast`}>

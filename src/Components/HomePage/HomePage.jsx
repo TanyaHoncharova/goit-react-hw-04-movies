@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink, useRouteMatch, useLocation } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import styles from './HomePage.module.css';
 
 const HomePage = () => {
-    // const {url} = useRouteMatch();
+    const {url} = useRouteMatch();
     const [topMovies, setTopMofies] = useState([]);
-
+    const location = useLocation();
     
     const KEY = `ccfe38522ca5ce6e07118893ca908be1`;
     const URL=`https://api.themoviedb.org/3`
@@ -39,7 +39,11 @@ const HomePage = () => {
         <ul >
             {topMovies.map(e => {
                 return (<li className={styles.order} key={e.id}>
-                    <NavLink to={`/movies/${e.id}`} className={styles.link}>{e.title}</NavLink>
+                    <NavLink to={{
+                        pathname: `/movies/${e.id}}`,
+                        state: { from: location },
+                    }}
+                        className={styles.link}>{e.title}</NavLink>
                 </li>)
             })
             }
