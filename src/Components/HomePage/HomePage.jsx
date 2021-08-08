@@ -1,32 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useRouteMatch, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
-import axios from 'axios';
+// import PropTypes from 'prop-types';
+
 import styles from './HomePage.module.css';
 
+import API from '../../servise/Api';
 const HomePage = () => {
-    const {url} = useRouteMatch();
-    const [topMovies, setTopMofies] = useState([]);
+
+    const [topMovies, setTopMovies] = useState([]);
     const location = useLocation();
-    
-    const KEY = `ccfe38522ca5ce6e07118893ca908be1`;
-    const URL=`https://api.themoviedb.org/3`
-    
-    async  function MovieSearch() {
-        try {
-            const response = await axios.get(`${URL}/trending/movie/week?api_key=${KEY}`);
-            // console.dir(response);
-            const topMovies = response.data.results;
-            setTopMofies(topMovies);
-            
-        } catch (error) {
-            console.error(error);
-        }
-    };
-        
+
     useEffect(() => {
-         MovieSearch();
+        API.getPopularMovies(setTopMovies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

@@ -1,46 +1,72 @@
 import axios from 'axios';
 
 
-// https://api.themoviedb.org/3/search/movie?api_key=<<api_key>>&language=en-US&page=1&include_adult=false
-
-const KEY = 'ccfe38522ca5ce6e07118893ca908be1';
-const BASE_URL = 'https://api.themoviedb.org';
+const KEY = `ccfe38522ca5ce6e07118893ca908be1`;
+const URL=`https://api.themoviedb.org/3`
 
 
-async function APIgetInfo(url) {
+export async function getPopularMovies(setTopMovies) {
     try {
-        const response = await axios.get(url);
-        return response;
+      const response = await axios.get(`${URL}/trending/movie/day?api_key=${KEY}`);
+      const topMovies = response.data.results;
+      setTopMovies(topMovies)
+  } catch (error) {
+      console.error(error);
+  }
+}
+
+ export async  function MovieSearch(searchQuery) {
+   try {
+    const response = await axios.get(`${URL}/search/movie?api_key=${KEY}&query=${searchQuery}&language=en-US&page=1&include_adult=false`);
+    const MoveiInfo = response.data.results;
+    return MoveiInfo;
     } catch (error) {
-        new Error('Not found');
-        }
+  console.error(error);
+}
+};
+    
+export  async function getMovieInfo(movieId) {
+  try {
+    const response = await axios.get(`${URL}/movie/${movieId}?api_key=${KEY}`);
+    const movieInfo = response.data;
+    return movieInfo;
+  } catch (error) {
+      console.error(error);
+  }
+};
+
+export  async function getCast(movieId) {
+  try {
+      const response = await axios.get(`${URL}/movie/${movieId}/credits?api_key=${KEY}&language=en-US`);
+      const MovieCast = response.data.cast;
+    return MovieCast;
+
+  } catch (error) {
+      console.error(error);
+  }
+};
+    
+export async function getRewies(movieId) {
+    try {
+        const response = await axios.get(`${URL}/movie/${movieId}/reviews?api_key=${KEY}&language=en-US`);
+        const MovieReviews= response.data.results;
+      return MovieReviews;
+
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+let API= {
+  getPopularMovies,
+  MovieSearch,
+  getMovieInfo,
+  getCast,
+  getRewies,
 }
 
-export function getPopularMovies() {
-  return APIgetInfo(`${BASE_URL}/3/trending/all/day?api_key=${KEY}`);
-}
-
-export function getMoviesByQuery(query) {
-  return APIgetInfo(
-    `${BASE_URL}/3/search/movie?api_key=${KEY}&query=${query}&page=1`,
-  );
-}
-
-export function getMovieDetails(movieId) {
-  return APIgetInfo(`${BASE_URL}/3//movie/${movieId}?api_key=${KEY}`);
-}
-
-export function getAboutActors(movieId) {
-  return APIgetInfo(
-    `${BASE_URL}/3//movie/${movieId}/credits?api_key=${KEY}`,
-  );
-}
-
-export function getReviews(movieId) {
-  return APIgetInfo(
-    `${BASE_URL}/3//movie/${movieId}/reviews?api_key=${KEY}`,
-  );
-}
+export default API;
 
 // топ фильмы 
 // https://api.themoviedb.org/3/trending/movie/week?api_key=ccfe38522ca5ce6e07118893ca908be1 
