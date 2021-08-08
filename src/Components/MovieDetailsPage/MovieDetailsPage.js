@@ -1,37 +1,34 @@
+import React, { Suspense, lazy } from 'react';
 import { useState, useEffect } from 'react';
 import { useParams, Route, useRouteMatch } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
-
 import { useHistory } from "react-router-dom";
 
-import BtnGoBack from '../BtnCoBack/BtnGoBack';
-
 import API from '../../servise/Api';
-import Cast from '../Cast';
-import Reviews from '../Reviews';
 
-import styles from './MovieDetailsPage.module.css'
+import styles from './MovieDetailsPage.module.css';
 
+const Cast = lazy(() => import('../Cast/Cast.js'  /* webpackChunkName: "Cast" */));
+const Reviews = lazy(() => import('../Reviews/Reviews.js'  /* webpackChunkName: "Reviews" */));
+const BtnGoBack = lazy(() => import('../BtnCoBack/BtnGoBack.js' /* webpackChunkName: "BtnCoBack" */));
 
 
 export default function MovieDetalsPage() {
-    const { movieId } = useParams();
-    const [movie, setMovie] = useState([]);
-  const { url, path } = useRouteMatch();
-  
+  const { movieId } = useParams();
+  const [movie, setMovie] = useState([]);
+  const { url, path } = useRouteMatch();  
   const history = useHistory();
 
-
-
-    useEffect(() => {
+  useEffect(() => {
         API.getMovieInfo(movieId).then(movieInfo => setMovie(movieInfo));
-    }, [movieId]);
-    
+    }, [movieId]); 
 
 
   return (
-      <>
+    <>
+      <Suspense fallback={<h1>Loading.....</h1>}>
       <BtnGoBack  />
+      </Suspense>
       {movie && (
         <>
         <div className={styles.wraper}>
@@ -63,13 +60,15 @@ export default function MovieDetalsPage() {
                     pathname:`${url}/reviews`,
                     state:{ from: history.location.state.from}}}>Reviews</NavLink>
                 </li>
-              </ul>
+            </ul>
+            <Suspense fallback={<h1>Loading.....</h1>}>
               <Route path={`${path}/cast`}>
                 <Cast />
               </Route>
               <Route path={`${path}/reviews`}>
                 <Reviews />
-              </Route>
+            </Route>
+            </Suspense>
             </div>
           </>
       )}

@@ -1,10 +1,11 @@
+import React, { Suspense, lazy } from 'react';
 import { NavLink, useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import BtnGoBack from '../BtnCoBack/BtnGoBack'
 import styles from './MoviesPage.module.css';
 import qs from "query-string";
 import API from '../../servise/Api';
 
+const BtnGoBack = lazy(() => import('../BtnCoBack/BtnGoBack.js' /* webpackChunkName: "BtnCoBack" */));
 
 const MoviesPage = () => {
     const {url} = useRouteMatch();
@@ -45,7 +46,9 @@ const MoviesPage = () => {
 
     return (
         <>
+            <Suspense fallback={<h1>Loading.....</h1>}>
             <BtnGoBack />
+            </Suspense>
             <form className={styles.form} onSubmit={handleSubmit}>
                 <input
                     className={styles.formInput}
