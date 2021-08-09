@@ -6,10 +6,10 @@ import styles from './PageNaveBar.module.css';
     return (
         <div className={styles.bar}>
         <nav>
-        <NavLink exact to="/" className={styles.nav} activeClassName="active">
+        <NavLink exact to="/" className={styles.nav} activeClassName={styles.active}>
           <span>Home</span>
         </NavLink>
-        <NavLink exact to="/movies" className={styles.nav} activeClassName="active">
+        <NavLink exact to="/movies" className={styles.nav} activeClassName={styles.active}>
           <span>Movies</span>
                 </NavLink>
         </nav>
